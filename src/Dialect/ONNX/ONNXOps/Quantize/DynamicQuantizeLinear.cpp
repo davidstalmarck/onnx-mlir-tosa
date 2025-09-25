@@ -61,7 +61,7 @@ LogicalResult ONNXDynamicQuantizeLinearOp::inferShapes(
 
   IntegerType ui8Type =
       IntegerType::get(getContext(), 8, IntegerType::Unsigned);
-  FloatType f32Type = FloatType::getF32(getContext());
+  FloatType f32Type = Builder(getContext()).getF32Type();
 
   ONNXDynamicQuantizeLinearOpShapeHelper shapeHelper(getOperation(), {});
   return shapeHelper.computeShapeAndUpdateTypes(

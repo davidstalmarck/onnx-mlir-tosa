@@ -34,7 +34,7 @@ ApiRegistry RegisterAllApis(MLIRContext *context) {
   auto int16Ty = IntegerType::get(context, 16);
   auto int32Ty = IntegerType::get(context, 32);
   auto int64Ty = IntegerType::get(context, 64);
-  auto float32Ty = FloatType::getF32(context);
+  auto float32Ty = Builder(getContext()).getF32Type();
 
   // Declare API type as an enum value, its string name and an LLVM Type
   // specifying its signature.

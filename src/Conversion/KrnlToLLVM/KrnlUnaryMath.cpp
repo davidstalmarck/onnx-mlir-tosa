@@ -172,19 +172,19 @@ public:
     Type outType = op->getResultTypes().front();
     Type llvmInType, llvmOutType;
     if (inType.isF16())
-      llvmInType = FloatType::getF16(context);
+      llvmInType = Builder(getContext()).getF16Type();
     else if (inType.isF32())
-      llvmInType = FloatType::getF32(context);
+      llvmInType = Builder(getContext()).getF32Type();
     else if (inType.isF64())
-      llvmInType = FloatType::getF64(context);
+      llvmInType = Builder(getContext()).getF64Type();
     else if (inType.isBF16())
-      llvmInType = FloatType::getBF16(context);
+      llvmInType = Builder(getContext()).getBF16Type();
     if (outType.isInteger(1))
       llvmOutType = IntegerType::get(context, 1);
     else if (outType.isF32())
-      llvmOutType = FloatType::getF32(context);
+      llvmOutType = Builder(getContext()).getF32Type();
     else if (outType.isF64())
-      llvmOutType = FloatType::getF64(context);
+      llvmOutType = Builder(getContext()).getF64Type();
 
     // Insert and/or get reference to elementary math function declaration.
     assert(
