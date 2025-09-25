@@ -135,17 +135,8 @@ struct ONNXHybridTransformPass
     func::FuncOp f = getOperation();
     Region &body = f.getBody();
 
-    GreedyRewriteConfig config;
-    config.useTopDownTraversal = true;
-    if (maxNumRewritesOffset == -1) {
-      config.maxNumRewrites = GreedyRewriteConfig::kNoLimit;
-    } else {
-      // Count the top level ops in f, i.e., excluding sub-regions.
-      float numOps = std::distance(body.op_begin(), body.op_end());
-      config.maxNumRewrites =
-          maxNumRewritesOffset + maxNumRewritesMultiplier * numOps;
-    }
-    if (failed(applyPatternsAndFoldGreedily(body, patterns, config))) {
+    // Apply patterns without configuration
+    if (failed(applyPatternsGreedily(body, patterns))) {
       llvm::errs() << "Warning: onnx-hybrid-transform didn't converge with "
                    << "max-num-rewrites-offset="
                    << maxNumRewritesOffset.getValue() << ", "

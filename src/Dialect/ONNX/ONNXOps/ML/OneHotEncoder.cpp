@@ -96,8 +96,7 @@ LogicalResult ONNXOneHotEncoderOp::inferShapes(
     return success();
 
   ONNXOneHotEncoderOpShapeHelper shapeHelper(getOperation(), {});
-  return shapeHelper.computeShapeAndUpdateType(FloatType::getF32(getContext()));
-  return success();
+  return shapeHelper.computeShapeAndUpdateType(Builder(getContext()).getF32Type());
 }
 
 //===----------------------------------------------------------------------===//

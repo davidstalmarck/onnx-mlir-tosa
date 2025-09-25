@@ -1138,19 +1138,16 @@ class SplitOfConst : public OpRewritePattern<ONNXSplitOp> {
 public:
   using OpRewritePattern<ONNXSplitOp>::OpRewritePattern;
 
-  LogicalResult match(ONNXSplitOp splitOp) const override {
+  LogicalResult matchAndRewrite(ONNXSplitOp splitOp, PatternRewriter &rewriter) const override {
     if (!isDenseONNXConstant(splitOp.getInput()))
       return failure();
     Value split = splitOp.getSplit();
     if (!(isa<NoneType>(split.getType()) || isDenseONNXConstant(split)))
       return failure();
-    return success();
-  }
-
-  void rewrite(ONNXSplitOp splitOp, PatternRewriter &rewriter) const override {
     rewriter.replaceOp(splitOp,
         ConstPropSplit(rewriter, splitOp.getResults(), splitOp.getInput(),
             splitOp.getSplit(), splitOp.getAxis()));
+    return success();
   }
 };
 
@@ -1158,13 +1155,9 @@ class IfOfConst : public OpRewritePattern<ONNXIfOp> {
 public:
   using OpRewritePattern<ONNXIfOp>::OpRewritePattern;
 
-  LogicalResult match(ONNXIfOp ifOp) const override {
+  LogicalResult matchAndRewrite(ONNXIfOp ifOp, PatternRewriter &rewriter) const override {
     if (!isDenseONNXConstant(ifOp.getCond()))
       return failure();
-    return success();
-  }
-
-  void rewrite(ONNXIfOp ifOp, PatternRewriter &rewriter) const override {
     Value cond = ifOp.getCond();
     ElementsAttr condElements = getConstValueElements(cond);
     auto splitValues = condElements.getValues<bool>();
@@ -1187,6 +1180,7 @@ public:
     rewriter.eraseOp(yieldOp);
     rewriter.inlineBlockBefore(newBlock, ifOp);
     rewriter.replaceOp(ifOp, outputs);
+    return success();
   }
 };
 
@@ -1213,7 +1207,7 @@ void ConstPropONNXToONNXPass::runOnOperation() {
 
   RewritePatternSet patterns(context);
   getConstPropONNXToONNXPatterns(patterns);
-  if (failed(applyPatternsAndFoldGreedily(function, std::move(patterns))))
+  if (failed(applyPatternsGreedily(function, std::move(patterns))))
     signalPassFailure();
 }
 

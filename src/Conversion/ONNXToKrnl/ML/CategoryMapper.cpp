@@ -17,6 +17,7 @@
 #include "src/Dialect/ONNX/ONNXOps/ShapeHelper.hpp"
 
 #include "mlir/Dialect/SCF/IR/SCF.h"
+#include "mlir/Dialect/MemRef/Utils/MemRefUtils.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/StringRef.h"
 #include "llvm/ADT/TypeSwitch.h"
@@ -278,12 +279,12 @@ private:
             MemRefType memRefType = MemRefType::get(
                 newShape, krnl::StringType::get(elementType.getContext()));
             SmallVector<int64_t, 4> offsets(shape.size(), 0);
-            SmallVector<int64_t, 4> strides;
-            int64_t alignmentOffset; // not used, just to make the function call
+            SmallVector<int64_t, 4> strides(shape.size(), 1);
+            // int64_t alignmentOffset; // not used, just to make the function call
                                      // completed.
-            if (getStridesAndOffset(memRefType, strides, alignmentOffset)
-                    .failed())
-              llvm_unreachable("Failed to get strides");
+            // if (mlir::getStridesAndOffset(memRefType, strides, alignmentOffset)
+            //         .failed())
+            //   llvm_unreachable("Failed to get strides");
             Value stringMemRef =
                 createMemRef.subView(memref, offsets, newShape, strides)
                     .getResult();

@@ -42,13 +42,13 @@ LogicalResult ONNXRandomNormalLikeOp::verify() {
     if (elementTypeID < 0 || elementTypeID > 2) {
       return emitOpError("dtype not 0, 1 or 2.");
     }
-    if (elementTypeID == 0 && outputType != FloatType::getF16(getContext()))
+    if (elementTypeID == 0 && outputType != Builder(getContext()).getF16Type())
       return emitOpError("output tensor does match 0 dtype.");
     else if (elementTypeID == 1 &&
-             outputType != FloatType::getF32(getContext()))
+             outputType != Builder(getContext()).getF32Type())
       return emitOpError("output tensor does match 1 dtype.");
     else if (elementTypeID == 2 &&
-             outputType != FloatType::getF64(getContext()))
+             outputType != Builder(getContext()).getF64Type())
       return emitOpError("output tensor does match 2 dtype.");
   } else if (inputType != outputType) {
     return emitOpError("output and input element types do not match.");
@@ -75,11 +75,11 @@ LogicalResult ONNXRandomNormalLikeOp::inferShapes(
   } else {
     int64_t elementTypeID = elementTypeIDDType.value();
     if (elementTypeID == 0)
-      elementType = FloatType::getF16(getContext());
+      elementType = Builder(getContext()).getF16Type();
     else if (elementTypeID == 1)
-      elementType = FloatType::getF32(getContext());
+      elementType = Builder(getContext()).getF32Type();
     else if (elementTypeID == 2)
-      elementType = FloatType::getF64(getContext());
+      elementType = Builder(getContext()).getF64Type();
     else
       return emitError("dtype attribute is invalid (use: 0, 1 or 2)");
   }

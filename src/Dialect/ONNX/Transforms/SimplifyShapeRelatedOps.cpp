@@ -504,11 +504,8 @@ void SimplifyShapeRelatedOpsPass::topDownShapeSimplification(
   ONNXUnsqueezeOp::getCanonicalizationPatterns(patterns, context);
   ONNXUnsqueezeV11Op::getCanonicalizationPatterns(patterns, context);
 
-  GreedyRewriteConfig config;
-  config.useTopDownTraversal = true;
-
   // Simplify shape-related ops.
-  if (failed(applyPatternsAndFoldGreedily(moduleOp, std::move(patterns))))
+  if (failed(applyPatternsGreedily(moduleOp, std::move(patterns))))
     signalPassFailure();
 }
 

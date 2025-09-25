@@ -538,7 +538,7 @@ struct ONNXGenericOpToCall : public mlir::OpConversionPattern<OP_TYPE> {
         opsForCall(opsForCall) {}
   std::string opsForCall;
 
-  mlir::LogicalResult match(OP_TYPE onnxOp) const final {
+  mlir::LogicalResult match(OP_TYPE onnxOp) const {
     mlir::Operation *op = onnxOp.getOperation();
     if (!checkOpToCall(op, opsForCall))
       return mlir::failure();
@@ -548,7 +548,7 @@ struct ONNXGenericOpToCall : public mlir::OpConversionPattern<OP_TYPE> {
     return mlir::success();
   }
   void rewrite(OP_TYPE onnxOp, ADAPTOR_TYPE adaptor,
-      mlir::ConversionPatternRewriter &rewriter) const final {
+      mlir::ConversionPatternRewriter &rewriter) const {
     mlir::Operation *op = onnxOp.getOperation();
     mlir::Location loc = onnx_mlir::ONNXLoc<OP_TYPE>(op);
     mlir::ValueRange operands = adaptor.getOperands();

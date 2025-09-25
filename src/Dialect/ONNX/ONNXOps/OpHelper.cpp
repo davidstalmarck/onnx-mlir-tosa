@@ -605,13 +605,10 @@ Type convertONNXTypeToMLIRType(
     Builder &builder, onnx::TensorProto_DataType onnxType) {
   switch (onnxType) {
   case onnx::TensorProto_DataType::TensorProto_DataType_FLOAT8E4M3FN:
-    return builder.getFloat8E4M3FNType();
   case onnx::TensorProto_DataType::TensorProto_DataType_FLOAT8E4M3FNUZ:
-    return builder.getFloat8E4M3FNUZType();
   case onnx::TensorProto_DataType::TensorProto_DataType_FLOAT8E5M2:
-    return builder.getFloat8E5M2Type();
   case onnx::TensorProto_DataType::TensorProto_DataType_FLOAT8E5M2FNUZ:
-    return builder.getFloat8E5M2FNUZType();
+    llvm_unreachable("float8 types not supported in this MLIR version");
   case onnx::TensorProto_DataType::TensorProto_DataType_BFLOAT16:
     return builder.getBF16Type();
   case onnx::TensorProto_DataType::TensorProto_DataType_FLOAT16:

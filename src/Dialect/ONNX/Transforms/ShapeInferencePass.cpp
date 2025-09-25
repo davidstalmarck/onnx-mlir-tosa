@@ -46,9 +46,7 @@ public:
 
   void runOnOperation() override {
     func::FuncOp f = getOperation();
-    GreedyRewriteConfig config;
-    config.useTopDownTraversal = true;
-    (void)applyPatternsAndFoldGreedily(f.getBody(), patterns, config);
+    (void)applyPatternsGreedily(f.getBody(), patterns);
     inferFunctionReturnShapes(f);
   }
 
